@@ -1,9 +1,17 @@
 package com.mystyle.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import com.fasterxml.jackson.annotation.JsonFilter;
 
 /**
  * @author chandan
@@ -14,18 +22,17 @@ public class AircraftDetails {
 	
 	    @Id
 	    private long fiid;
-
-	    @Indexed(unique = true)
 	    private String aircraftName;
-
 	    private String departure;
 	    private String arival;
-	    private String flightDate;
+	    @DateTimeFormat(iso = ISO.DATE_TIME)
+	    private Date flightDate;
+	    
 	    
 	    
 	    
 		/**
-		 * 
+		
 		 */
 		public AircraftDetails() {
 		}
@@ -37,11 +44,17 @@ public class AircraftDetails {
 		 * @param string5
 		 */
 		public AircraftDetails(String fiid, String aircraftName, String departure, String arival, String flightDate) {
-			this.fiid= new Long(fiid);
+			  
+			this.fiid=Long.parseLong(fiid);
 			this.aircraftName=aircraftName;
 			this.departure=departure;
 			this.arival=arival;
-			this.flightDate=flightDate;
+			try {
+				this.flightDate=new SimpleDateFormat("ddMMyyyy").parse(flightDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		}
 		public long getFiid() {
@@ -68,11 +81,16 @@ public class AircraftDetails {
 		public void setArival(String arival) {
 			this.arival = arival;
 		}
-		public String getFlightDate() {
+		public Date getFlightDate() {
 			return flightDate;
 		}
-		public void setFlightDate(String flightDate) {
-			this.flightDate = flightDate;
+		public void setFlightDate( String flightDate) {
+			try {
+				this.flightDate = new SimpleDateFormat("ddMMyyyy").parse(flightDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		@Override
 		public String toString() {

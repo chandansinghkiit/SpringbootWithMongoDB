@@ -3,6 +3,8 @@
  */
 package com.mystyle.aircraft.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,15 +37,14 @@ public class AircraftService {
     MongoTemplate mongoTemplate;
 
 	
-	public  boolean saveAircraftObject(List<AircraftDetails> listAircrafts) {
+	public List<AircraftDetails> saveAircraftObject(List<String> lines) {
 		
-		boolean br=aircraftRepository.saveAll(listAircrafts) != null;
-		return br;
+		List<AircraftDetails> listAircrafts=setToObject(lines);
+		
+		return aircraftRepository.saveAll(listAircrafts);
 		
 	}
 	
-
-
 	public List<AircraftDetails> findAll() {
 		return aircraftRepository.findAll();	
 	}
@@ -83,14 +84,32 @@ public AircraftDetails findByFid(Long fiid) {
 		   Criteria phoneCriteria =     Criteria.where("departure").is(aircraft.getDeparture());
 		   dynamicQuery.addCriteria(phoneCriteria);
 		}
+		
+		if (aircraft.getFlightDate()!=null)
+		{
+			 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
+		   Criteria phoneCriteria =  Criteria.where("flightDate").is(aircraft.getFlightDate());
+		   dynamicQuery.addCriteria(phoneCriteria);
+		}
+		
 		return mongoTemplate.find(dynamicQuery, AircraftDetails.class, "AircraftDetails");
 		
 		
 		
+	}
+	
+	public List<AircraftDetails> setToObject(List<String> lines)
+	{
+		List<AircraftDetails> listofAircrafts = new ArrayList<AircraftDetails>();
+		for (String l : lines) {
+			String line[] = l.split(",");
+			AircraftDetails aiobject = new AircraftDetails(line[0], line[1], line[2], line[3], line[4]);
+			listofAircrafts.add(aiobject);
+		}
 
+		listofAircrafts.forEach(System.out::println);
 		
-		
-		
+		return listofAircrafts;
 		
 	}
 
