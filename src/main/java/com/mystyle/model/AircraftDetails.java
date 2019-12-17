@@ -25,7 +25,7 @@ public class AircraftDetails {
 	    private String aircraftName;
 	    private String departure;
 	    private String arival;
-	    @DateTimeFormat(iso = ISO.DATE_TIME)
+	    @DateTimeFormat(pattern = "yyyyMMdd")
 	    private Date flightDate;
 	    
 	    
@@ -84,13 +84,10 @@ public class AircraftDetails {
 		public Date getFlightDate() {
 			return flightDate;
 		}
-		public void setFlightDate( String flightDate) {
-			try {
-				this.flightDate = new SimpleDateFormat("ddMMyyyy").parse(flightDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		public void setFlightDate(Date flightDate) {
+		
+				this.flightDate = flightDate;
+			
 		}
 		@Override
 		public String toString() {

@@ -5,10 +5,13 @@ package com.mystyle.aircraft.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 
@@ -87,10 +90,21 @@ public AircraftDetails findByFid(Long fiid) {
 		
 		if (aircraft.getFlightDate()!=null)
 		{
-			 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
-		   Criteria phoneCriteria =  Criteria.where("flightDate").is(aircraft.getFlightDate());
+			
+			
+			SimpleDateFormat sdf;
+			sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+			sdf.setTimeZone(TimeZone.getTimeZone("CET"));
+			String text = sdf.format(aircraft.getFlightDate());
+			
+			 //SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-mm-ddTHH:MM:ssZ");
+			 Date s=(aircraft.getFlightDate());
+			 System.out.println("date......"+s+"   text"+text);
+			
+		   Criteria phoneCriteria =  Criteria.where("flightDate").is(text);
 		   dynamicQuery.addCriteria(phoneCriteria);
 		}
+		//mongoTemplate.executeQuery("select * from Aircraftdetails",AircraftDetails.class,null);
 		
 		return mongoTemplate.find(dynamicQuery, AircraftDetails.class, "AircraftDetails");
 		
