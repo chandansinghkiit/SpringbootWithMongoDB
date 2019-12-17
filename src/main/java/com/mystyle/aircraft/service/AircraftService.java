@@ -97,6 +97,8 @@ public AircraftDetails findByFid(Long fiid) {
 			sdf.setTimeZone(TimeZone.getTimeZone("CET"));
 			String text = sdf.format(aircraft.getFlightDate());
 			
+			
+			
 			 //SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-mm-ddTHH:MM:ssZ");
 			 Date s=(aircraft.getFlightDate());
 			 System.out.println("date......"+s+"   text"+text);
